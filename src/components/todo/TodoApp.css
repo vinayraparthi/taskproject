@@ -1,0 +1,19 @@
+label,input,button{
+    margin: 10px;
+    padding: 5px;
+}
+
+footer {
+    margin-top: auto; /* Push the footer to the bottom */
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the page takes at least the full height of the viewport */
+    margin: 0; /* Remove default margin */
+  }
