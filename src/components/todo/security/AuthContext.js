@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import {   loginTodoApi } from "../api/TodoApiService";
+import {   loginTodoApi } from "../api/Authentication"
+import { jwtDecode as jwt_decode } from "jwt-decode";
+import { apiClient } from "../api/ApiClint";
 
 // 1 create a Context
 // 2 put some state in the context
@@ -13,37 +15,17 @@ export const useAuth = () =>useContext(AuthContext)
 
 export default function AuthProvider({children}){
 
-    // const [number , setNumber] = useState(0)
-
     const [isAuthenticated , setAuthenticated] = useState(false)
     
     const [userid , setUserid] = useState(0)
 
     const [token , setToken] = useState(null)
 
-    // function login(username,password){
+    const [username , setUsername] = useState(null)
 
-    //     if( username === "vinay" && password === "vinay@123"){
-    //         setAuthenticated(true)
-    //         setUserid(1)
-    //         return true
-    //     }else{
-    //         setAuthenticated(false)
-    //         setUserid(0)
-    //         return false
-    //     }
- 
-    // }
 
     async function login(username,password){
-
-         const baToken ='Basic ' +window.btoa(username + ":" + password)
-
         try {
-
-        //const response = await executeBasicAuthenticationService(baToken)
-
-        // const response = await loginTodoApi(username,password)
 
         const loginData={
             email:username,
@@ -51,22 +33,27 @@ export default function AuthProvider({children}){
         }
 
         const response = await loginTodoApi(loginData)
+        console.log(response.data)
 
+        if(response.data.token){
 
-        if(response.status === 200){
-            console.log(response)
+            const jwtToken ='Bearer ' + response.data.token
+
+            const decodedToken = jwt_decode(response.data.token);
+            console.log(decodedToken)
             setAuthenticated(true)
-            setUserid(response.data)
-            setToken(baToken)
+            setUserid(decodedToken.userId)
+            setToken(jwtToken)
+            setUsername(decodedToken.username)
 
-            // apiClient.interceptors.request.use(
-            //     (config) =>{
-            //         console.log("intercepting and adding a token")
-            //         config.headers.Authorization= baToken
-            //         return config
-            //     }
+            apiClient.interceptors.request.use(
+                (config) =>{
+                    console.log("intercepting and adding a token")
+                    config.headers.Authorization= jwtToken
+                    return config
+                }
                 
-            // )
+            )
 
             return true
         }else{
@@ -77,27 +64,18 @@ export default function AuthProvider({children}){
         } catch(error){
             logout()
             return false
-        }
-
-        
+        } 
     }
-
     function logout(){
         setAuthenticated(false)
         setUserid(0)
         setToken(null)
     }
-
-
-    // setInterval(() => setNumber(number+1),10000)
-
     return(
-        <AuthContext.Provider value={{isAuthenticated, login, logout, userid, token}}>
+        <AuthContext.Provider value={{isAuthenticated, login, logout, userid, token,username}}>
             {children}
         </AuthContext.Provider>
 
     )
 }
-
-
 // authprovider as a parent

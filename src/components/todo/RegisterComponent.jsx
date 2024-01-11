@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { registerUserApi } from "./api/TodoApiService"
+import { registerUserApi } from "./api/Authentication"  
 
 export default function RegisterComponent(){
 
@@ -56,7 +56,7 @@ export default function RegisterComponent(){
                 <div className="form-outline mb-4">
                   
                   <label className="form-label" htmlFor="typeEmailX-2">Name</label>
-                  <input type="text" id="typeEmailX-2" className="form-control form-control-lg" value={username} onChange={handelUsernameChange} />
+                  <input type="text" id="typeEmailX" className="form-control form-control-lg" value={username} onChange={handelUsernameChange} />
 
                 </div>
 

@@ -3,42 +3,31 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from './security/AuthContext'
 function LoginComponent(){
 
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     // const [showSuccessMessage, setSuccessMessage] = useState(false)
     const [showErrorMessage, setErrorMessage] = useState(false)
     const navigate = useNavigate();
     const authContext = useAuth()
     const location = useLocation();
+    
+    const username = authContext.username
 
     function handelUsernameChange(event){
-        setUsername(event.target.value);
+        setEmail(event.target.value);
     }
     function handelPasswordChange(event){
         console.log(event.target.value);
         setPassword(event.target.value);
     }
     async function handelSubmit(){
-        if( await authContext.login(username, password)){
+        if( await authContext.login(email, password)){
             navigate(`/welcome/${username}`)
             
         }else{
             setErrorMessage(true)
         }
     }
-    // function SuccessMessageComponent(){
-    //     if(showSuccessMessage){
-    //         return <div className='SuccessMessage'>Authentication Successfully</div>
-    //     }
-    //     return null
-    // }
-    
-    // function ErrorMessageComponent(){
-    //     if(showErrorMessage){
-    //     return <div className='errorMessage'>Authentication Failed. Please Check Your Credentials.</div>
-    //     }
-    //     return null
-    // }
     return (
 
 <section style={{ height: '100vh', backgroundColor: '#508bfc' }}>
@@ -57,7 +46,7 @@ function LoginComponent(){
                 )}
                 <div className="form-outline mb-4">
                   <label className="form-label" htmlFor="typeEmailX-2">Email</label>
-                  <input type="email" id="typeEmailX-2" className="form-control form-control-lg"value={username} onChange={handelUsernameChange}/>
+                  <input type="email" id="typeEmailX-2" className="form-control form-control-lg"value={email} onChange={handelUsernameChange}/>
                   
                 </div>
 
